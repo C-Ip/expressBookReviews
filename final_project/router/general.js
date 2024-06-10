@@ -21,36 +21,92 @@ public_users.post("/register", (req,res) => {
 
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
-  res.send(JSON.stringify(books, null, 4));
-  return res.status(300).json({message: "Yet to be implemented"});
+  const getBookList = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      try {
+        let data =  JSON.stringify(books, null, 4)
+        resolve(data);
+      } catch (err) {
+        reject(err);
+      }
+    }, 3000);
+  });
+
+  getBookList.then(
+    (data) => res.send(data),
+    (err) => res.send("Book list could not be retrieved.")
+  );
 });
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
   const isbn = req.params.isbn;
-  res.send(books[isbn]);
- });
+  const getBookDetails = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      try {
+        let details = books[isbn];
+        resolve(details);
+      } catch(err) {
+        reject(err);
+      }
+    }, 3000);
+  })
+  
+  getBookDetails.then(
+    (details) => res.send(details),
+    (err) => res.send("Book details could not be retrieved.")
+  )
+  });
+
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
   const author = req.params.author;
-  for (const [key, value] of Object.entries(books)) {
-    if(books[key].author == author) {
-      res.send(books[key]);
-    }
-  }
-  res.send("No author found");
+  const getBookDetails = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      try {
+        for (const [key, value] of Object.entries(books)) {
+          if(books[key].author == author) {
+            let data = books[key];
+            resolve(data);
+          }
+        }
+
+      } catch(err) {
+        reject(err);
+      }
+    }, 3000);
+  })
+  
+  getBookDetails.then(
+    (details) => res.send(details),
+    (err) => res.send("No book withe the author found.")
+  )
 });
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
   const title = req.params.title;
-  for(const [key, value] of Object.entries(books)) {
-    if(books[key].title == title) {
-      res.send(books[key]);
-    }
-  }
-  res.send("No title found")
+  const getBookDetails = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      try {
+        for(const [key, value] of Object.entries(books)) {
+          if(books[key].title == title) {
+            let data = books[key];
+            resolve(data)
+          }
+        }
+
+      } catch(err) {
+        reject(err);
+      }
+    }, 3000);
+  })
+  
+  getBookDetails.then(
+    (details) => res.send(details),
+    (err) => res.send("No book withe the title found.")
+  )
 });
 
 //  Get book review
